@@ -1,11 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const userRoutes = require("./routes/user.route.js");
+const movieRoutes = require("./routes/movie..route.js");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+
 app.use("/users", userRoutes);
+app.use("/movies", movieRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from Node API server");
