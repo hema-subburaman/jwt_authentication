@@ -16,7 +16,7 @@ router.get("/:id/videos", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: Video,
+      data: video,
     });
   } catch (error) {
     res.status(500).json({
