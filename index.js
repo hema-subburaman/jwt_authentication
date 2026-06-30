@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/user.route.js");
-const movieRoutes = require("./routes/movie..route.js");
+const movieRoutes = require("./routes/movie.route.js");
+const movieDetailsRoutes = require("./routes/movieDetails.route.js");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/users", userRoutes);
 app.use("/movies", movieRoutes);
+app.use("/movies", movieDetailsRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from Node API server");
