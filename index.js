@@ -6,8 +6,6 @@ const movieRoutes = require("./routes/movie..route.js");
 
 const app = express();
 
-const cors = require("cors");
-
 app.use(
   cors({
     origin: "https://insta-play-vert.vercel.app/",
