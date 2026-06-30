@@ -5,7 +5,7 @@ router.get("/:id/videos", async (req, res) => {
   try {
     const video = await Video.findOne({
       id: Number(req.params.id),
-    });
+    }).lean();
 
     if (!video) {
       return res.status(404).json({
@@ -25,5 +25,18 @@ router.get("/:id/videos", async (req, res) => {
     });
   }
 });
+
+// const mongoose = require("mongoose");
+
+// router.get("/:id/videos", async (req, res) => {
+//   const docs = await mongoose.connection.db
+//     .collection("video-datas")
+//     .find({})
+//     .toArray();
+
+//   console.log(JSON.stringify(docs, null, 2));
+
+//   res.json(docs);
+// });
 
 module.exports = router;
