@@ -8,7 +8,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://insta-play-vert.vercel.app/",
+    origin: "https://insta-play-vert.vercel.app",
     credentials: true,
   }),
 );
