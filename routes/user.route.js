@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Users = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 router.route("/").get((req, res) => {
   Users.find()
@@ -10,37 +11,84 @@ router.route("/").get((req, res) => {
 
 //signup
 
-router.route("/register").post((req, res) => {
-  const { username } = req.body;
+router.route("/register").post(async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
-      const password = hashedPassword;
-      const newUser = new Users({ username, password });
-      newUser
-        .save()
-        .then(() => res.json("New User added"))
-        .catch((err) => res.status(400).json("Error : ", err));
+    const existingUser = await Users.findOne({ username });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "Username already exists",
+      });
+    }
+    const salt = await bcrypt.genSalt(10);
+
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new Users({
+      username,
+      password: hashedPassword,
     });
-  });
+
+    await newUser.save();
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 //login
 
 router.route("/login").post(async (req, res) => {
   try {
-    var user = await Users.findOne({ username: req.body.username });
+    const user = await Users.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(400).send("User not found please register");
+      return res.status(400).json({
+        success: false,
+        message: "User not found. Please register",
+      });
     }
 
-    var validPassword = await bcrypt.compare(req.body.password, user.password);
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password,
+    );
     if (!validPassword) {
-      return res.send("Password is incorrect!!");
+      return res.status(400).json({
+        success: false,
+        message: "Password is incorrect",
+      });
     }
-    res.send("Login Successfull");
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+      },
+      process.env.ACCESS_TOKEN,
+      {
+        expiresIn: "1d",
+      },
+    );
+    res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      token,
+    });
   } catch (error) {
-    res.status(400).json("Error : ", err);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 

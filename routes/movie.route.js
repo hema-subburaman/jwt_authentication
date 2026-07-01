@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const Movies = require("../models/movie.model.js");
+const authenticateToken = require("../middleware/auth.middleware.js");
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = 20;

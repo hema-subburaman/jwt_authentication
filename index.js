@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,23 +11,8 @@ const videoRoutes = require("./routes/video.route.js");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/users", userRoutes);
-app.use("/movies", movieRoutes);
-app.use("/movies", searchRoutes);
-app.use("/movies", movieDetailsRoutes);
-app.use("/movies", videoRoutes);
-
-app.get("/", (req, res) => {
-  res.send("Hello from Node API server");
-});
-
 mongoose
-  .connect(
-    "mongodb+srv://iamhema2k6_db_user:TbcFJon1ER8PPuvp@authentication.wmcpstk.mongodb.net/?appName=authentication",
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to the database");
     app.listen(3000, () => {
@@ -36,3 +23,17 @@ mongoose
     console.log("Connection failed");
     console.log(error);
   });
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/users", userRoutes);
+app.use("/movies", movieRoutes);
+app.use("/movies", searchRoutes);
+app.use("/movies", movieDetailsRoutes);
+app.use("/movies", videoRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Hello from Node API server");
+});

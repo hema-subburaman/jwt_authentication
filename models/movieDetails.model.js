@@ -7,7 +7,10 @@ const movieDetailsSchema = new mongoose.Schema(
       unique: true,
     },
 
-    title: String,
+    title: {
+      type: String,
+      required: true,
+    },
     original_title: String,
     overview: String,
 
@@ -77,6 +80,6 @@ const movieDetailsSchema = new mongoose.Schema(
   },
 );
 
-const MovieDetails = mongoose.model("MovieDetails-Data", movieDetailsSchema);
+const MovieDetails = mongoose.model("moviedetail-data", movieDetailsSchema);
 
 module.exports = MovieDetails;
