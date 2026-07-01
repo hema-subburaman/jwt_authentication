@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/user.route.js");
+const searchRoutes = require("./routes/search.route.js");
 const movieRoutes = require("./routes/movie.route.js");
 const movieDetailsRoutes = require("./routes/movieDetails.route.js");
 const videoRoutes = require("./routes/video.route.js");
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/users", userRoutes);
 app.use("/movies", movieRoutes);
+app.use("/movies", searchRoutes);
 app.use("/movies", movieDetailsRoutes);
 app.use("/movies", videoRoutes);
 
